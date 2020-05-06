@@ -106,14 +106,21 @@ class _DetailViewState extends State<DetailView> {
                     style: _textStyle,
                   ),
                   onPressed: () {
-                    Item item = widget.item;
+                    Item item = Item(
+                        image: widget.item.image,
+                        thumbnail: widget.item.thumbnail,
+                        title: widget.item.title,
+                        sku: widget.item.sku,
+                        description: widget.item.description,
+                        price: widget.item.price);
+
                     item.extras = _extras
                         .where((e) => e.choices.any((c) => c.chosen))
                         .map((e) => Extra(
                             title: e.title,
                             isMultiple: e.isMultiple,
-                            choices:
-                                e.choices.where((c) => c.chosen).toList())).toList();
+                            choices: e.choices.where((c) => c.chosen).toList()))
+                        .toList();
                     _cartProvider.addItem(CartItem(
                       price: totalPrice(),
                       item: item,
