@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:restaurante/components/cartIcon.dart';
+import 'package:restaurante/components/categoryPanel.dart';
 import 'package:restaurante/controllers/categoriaController.dart';
 import 'package:restaurante/models/Categoria.dart';
 import 'package:restaurante/views/cart.dart';
-import 'package:restaurante/views/detail.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -11,13 +11,26 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final Image banner = Image.asset(
+    'assets/img/imagen1.jpg',
+    fit: BoxFit.cover,
+  );
+
   final CategoriaController _categoriaController = CategoriaController();
   Future<List<Categoria>> _future;
+
+  List<Categoria> categorias;
 
   @override
   void initState() {
     super.initState();
     _future = _categoriaController.list();
+  }
+
+  @override
+  void didChangeDependencies() {
+    precacheImage(banner.image, context);
+    super.didChangeDependencies();
   }
 
   Future<void> _refreshData() async {
@@ -45,7 +58,7 @@ class _HomeViewState extends State<HomeView> {
                 (BuildContext context, AsyncSnapshot<List<Categoria>> snap) {
               switch (snap.connectionState) {
                 case ConnectionState.done:
-                  List<Categoria> categorias = snap.data;
+                  categorias = snap.data;
                   return RefreshIndicator(
                     onRefresh: _refreshData,
                     child: SingleChildScrollView(
@@ -53,55 +66,14 @@ class _HomeViewState extends State<HomeView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Image.asset('assets/img/imagen1.jpg'),
-                          ExpansionPanelList(
-                            expansionCallback: (int i, bool isExpanded) {
+                          banner,
+                          CategoriaPanel(
+                            categorias: categorias,
+                            expansionCallback: (int i, bool expanded) {
                               setState(() {
-                                categorias[i].isExpanded = !isExpanded;
+                                categorias[i].isExpanded = !expanded;
                               });
                             },
-                            children: categorias
-                                .map((c) => ExpansionPanel(
-                                    isExpanded: c.isExpanded,
-                                    headerBuilder: (BuildContext context,
-                                            bool isExpaded) =>
-                                        ListTile(
-                                          title: Text(c.title),
-                                        ),
-                                    body: Column(
-                                        children: <Widget>[
-                                              c.image != null
-                                                  ? Image.network(c.image)
-                                                  : null,
-                                            ].where((e) => e != null).toList() +
-                                            c.items
-                                                .map((item) => ListTile(
-                                                      onTap: () => Navigator.of(
-                                                              context)
-                                                          .push(MaterialPageRoute(
-                                                              builder: (BuildContext
-                                                                      context) =>
-                                                                  DetailView(
-                                                                      item:
-                                                                          item))),
-                                                      leading: SizedBox(
-                                                        width: 35.0,
-                                                        height: 35.0,
-                                                        child: Image.network(
-                                                            item.image),
-                                                      ),
-                                                      title: Text(item.title),
-                                                      subtitle:
-                                                          item.description !=
-                                                                  null
-                                                              ? Text(item
-                                                                  .description)
-                                                              : null,
-                                                      trailing: Text(item.price
-                                                          .toStringAsFixed(2)),
-                                                    ))
-                                                .toList())))
-                                .toList(),
                           )
                         ],
                       ),
