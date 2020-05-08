@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/common/messages.dart';
+import 'package:restaurante/components/mapContainer.dart';
 import 'package:restaurante/providers/orderProvider.dart';
 
 class AddressComponent extends StatefulWidget {
@@ -33,22 +34,11 @@ class _AddressComponentState extends State<AddressComponent> {
   bool _searched = false;
   bool _searching = false;
 
-  final CameraPosition _cameraPosition =
-      CameraPosition(target: LatLng(-12.046374, -77.042793), zoom: 9);
+  CameraPosition _cameraPosition;
+
   List<Marker> _markers = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _addressFocusNode.addListener(() {
-      print(_addressFocusNode.hasFocus);
-      if (!_addressFocusNode.hasFocus &&
-          !_searched &&
-          _addressController.text.isNotEmpty) {
-        searchAddress();
-      }
-    });
-  }
+  List<Placemark> _placemarks;
 
   @override
   Widget build(BuildContext context) {
@@ -62,51 +52,29 @@ class _AddressComponentState extends State<AddressComponent> {
             width: size.width,
             color: Colors.transparent,
           ),
-          Container(
-            height: size.height - size.height / 2.5,
-            width: size.width,
-            child: GoogleMap(
-              onTap: (LatLng coo) async {
-                setState(() {
-                  addressNotFound = false;
-                });
-                if (_markers.length > 0) {
-                  setState(() {
-                    _markers.removeLast();
-                    _markers.add(Marker(
-                        markerId: MarkerId(coo.toString()),
-                        icon: BitmapDescriptor.defaultMarker,
-                        position: coo));
-                  });
-                  List<Placemark> placemarks = await _geolocator
-                      .placemarkFromCoordinates(coo.latitude, coo.longitude,
-                          localeIdentifier: 'es_PE');
-                  if (placemarks.length > 0) {
-                    Placemark placemark = placemarks.first;
-                    _addressController.text =
-                        '${placemark.thoroughfare} ${placemark.subThoroughfare}, ${placemark.locality}';
-                  } else {
+          _cameraPosition != null
+              ? MapContainer(
+                  mapController: _mapController,
+                  height: size.height - size.height / 2.5,
+                  width: size.width,
+                  initialCameraPosition: _cameraPosition,
+                  onMapCreated: (GoogleMapController controller) {
+                    _mapController.complete(controller);
                     setState(() {
-                      addressNotFound = true;
+                      _searched = true;
                     });
-                  }
-                }
-              },
-              initialCameraPosition: _cameraPosition,
-              onMapCreated: (GoogleMapController controller) {
-                _mapController.complete(controller);
-              },
-              markers: Set<Marker>.from(_markers),
-            ),
-          ),
+                  },
+                )
+              : null,
           Positioned(
-            top: size.height - size.height / 2.5 - 25.0,
-            child: Container(
+            bottom: 0.0,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 600),
               alignment: Alignment.topCenter,
               padding:
                   const EdgeInsets.only(left: 15.0, right: 15.0, top: 17.0),
               width: size.width,
-              height: size.height / 2.5 + 25.0,
+              height: _searched ? size.height / 2.5 + 25.0 : size.height,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -130,93 +98,105 @@ class _AddressComponentState extends State<AddressComponent> {
                           fontWeight: FontWeight.bold, fontSize: 18.0),
                     ),
                     _textFormField(
-                        focusNode: _addressFocusNode,
-                        validator: _addressValidator,
-                        errorText: addressNotFound ? addressErrorText : null,
-                        controller: _addressController,
-                        label: 'Dirección',
-                        icon: Icons.room,
-                        textInputAction: TextInputAction.search,
-                        onEditingComplete: _onEditingComplete),
-                    _textFormField(
-                        controller: _interiorController,
-                        label: 'Interior',
-                        icon: Icons.business,
-                        textInputType: TextInputType.number),
+                      focusNode: _addressFocusNode,
+                      validator: _addressValidator,
+                      errorText: addressNotFound ? addressErrorText : null,
+                      controller: _addressController,
+                      label: 'Dirección',
+                      icon: Icons.room,
+                      textInputAction: TextInputAction.search,
+                      onEditingComplete: _searchAddress,
+                    ),
+                    _placemarks != null && !_searched
+                        ? ListView.separated(
+                            separatorBuilder: (BuildContext context, int i) =>
+                                Divider(
+                                  height: 9.0,
+                                ),
+                            shrinkWrap: true,
+                            itemCount: _placemarks.length,
+                            itemBuilder: (BuildContext context, int i) =>
+                                ListTile(
+                                    onTap: () {
+                                      _listTileOnTap(
+                                          '${_placemarks[i].thoroughfare} ${_placemarks[i].subThoroughfare}, ${_placemarks[i].locality}, ${_placemarks[i].administrativeArea}',
+                                          _placemarks[i].position);
+                                    },
+                                    dense: true,
+                                    title: Text(
+                                        '${_placemarks[i].thoroughfare} ${_placemarks[i].subThoroughfare}, ${_placemarks[i].locality}, ${_placemarks[i].administrativeArea}')))
+                        : null,
+                    _searched
+                        ? _textFormField(
+                            controller: _interiorController,
+                            label: 'Interior',
+                            icon: Icons.business,
+                            textInputType: TextInputType.number)
+                        : null,
                     Padding(padding: const EdgeInsets.all(5.0)),
-                    RaisedButton(
-                      color: Theme.of(context).colorScheme.primary,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          _orderProvider.saveAddress(_addressController.text,
-                              _interiorController.text);
-                          widget.onConfirm();
-                        }
-                      },
-                      child: Text('Confirmar'),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0)),
-                    )
-                  ],
+                    _searched
+                        ? RaisedButton(
+                            color: Theme.of(context).colorScheme.primary,
+                            textColor: Colors.white,
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                _orderProvider.saveAddress(
+                                    _addressController.text,
+                                    _interiorController.text);
+                                widget.onConfirm();
+                              }
+                            },
+                            child: Text('Confirmar'),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25.0)),
+                          )
+                        : null,
+                  ].where((w) => w != null).toList(),
                 ),
               ),
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25.0),
-                      topRight: Radius.circular(25.0))),
+                  borderRadius: _searched
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(25.0),
+                          topRight: Radius.circular(25.0))
+                      : null),
             ),
           )
-        ],
+        ].where((w) => w != null).toList(),
       ),
     );
   }
 
-  void _onEditingComplete() async {
-    if (_address != _addressController.text) {
-      setState(() {
-        _searched = false;
-      });
-    } else {
-      setState(() {
-        _searched = true;
-      });
-    }
+  void _searchAddress() async {
     FocusScope.of(context).unfocus();
-  }
-
-  void searchAddress() async {
     setState(() {
+      _searched = false;
       _searching = true;
       addressNotFound = false;
     });
-    Placemark placemark = await _getDestination(_addressController.text);
+    List<Placemark> placemarks = await _getAddresses(_addressController.text)
+        .catchError((e) => print(e.toString()));
     setState(() {
       _searching = false;
     });
-    if (placemark != null) {
-      Position position = placemark.position;
-      Marker marker = _getMarker(LatLng(position.latitude, position.longitude),
-          placemark.name, BitmapDescriptor.defaultMarker);
-
-      if (_markers.length > 0) {
-        if (_markers.first.markerId.value != placemark.name) {
-          setState(() {
-            _markers[0] = marker;
-          });
-        }
-      } else {
-        setState(() {
-          _markers.add(marker);
-        });
-      }
-      await _goToAddress(LatLng(position.latitude, position.longitude));
+    if (placemarks != null) {
+      setState(() {
+        _placemarks = placemarks;
+      });
     } else {
       setState(() {
         addressNotFound = true;
       });
     }
+  }
+
+  void _listTileOnTap(String address, Position position) {
+    _addressController.text = address;
+    setState(() {
+      _cameraPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude), zoom: 17);
+    });
   }
 
   String _addressValidator(String s) {
@@ -226,26 +206,13 @@ class _AddressComponentState extends State<AddressComponent> {
     return null;
   }
 
-  Marker _getMarker(LatLng position, String id, BitmapDescriptor descriptor) {
-    final MarkerId markerId = MarkerId(id);
-    Marker marker = Marker(
-      markerId: markerId,
-      icon: descriptor,
-      position: position,
-    );
-    return marker;
-  }
-
-  Future<Placemark> _getDestination(String address) async {
+  Future<List<Placemark>> _getAddresses(String address) async {
     List<Placemark> placemarks = await Geolocator()
         .placemarkFromAddress(address, localeIdentifier: 'es_PE')
         .catchError((e) {
-          print('error');
-        });
-    if (placemarks != null) {
-      return placemarks.first;
-    }
-    return null;
+      print('error');
+    });
+    return placemarks;
   }
 
   Future<void> _goToAddress(LatLng position) async {
