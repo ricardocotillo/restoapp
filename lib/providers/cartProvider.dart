@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurante/models/cartItem.dart';
+import 'package:restaurante/models/cart.dart';
 import 'package:restaurante/models/order.dart';
 
 class CartProvider with ChangeNotifier {
