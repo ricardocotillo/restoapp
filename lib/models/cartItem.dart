@@ -1,7 +1,8 @@
-import 'package:restaurante/models/Categoria.dart';
+
+import 'package:restaurante/models/categoria.dart';
 
 class CartItem {
-  final Item item;
+  final Product item;
   final int quantity;
   final double price;
 

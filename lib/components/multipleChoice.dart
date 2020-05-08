@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurante/models/Categoria.dart';
+import 'package:restaurante/models/categoria.dart';
 
 class MultipleChoice extends StatefulWidget {
   final String title;

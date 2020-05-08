@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'Categoria.dart';
+part of 'categoria.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -11,8 +11,8 @@ Categoria _$CategoriaFromJson(Map<String, dynamic> json) {
     title: json['name'] as String,
     image: json['image'] as String,
     items: (json['products'] as List)
-        ?.map(
-            (e) => e == null ? null : Item.fromJson(e as Map<String, dynamic>))
+        ?.map((e) =>
+            e == null ? null : Product.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
@@ -32,8 +32,8 @@ Map<String, dynamic> _$CategoriaToJson(Categoria instance) {
   return val;
 }
 
-Item _$ItemFromJson(Map<String, dynamic> json) {
-  return Item(
+Product _$ProductFromJson(Map<String, dynamic> json) {
+  return Product(
     title: json['name'] as String,
     description: json['description'] as String,
     price: (json['price'] as num)?.toDouble(),
@@ -46,7 +46,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ItemToJson(Item instance) {
+Map<String, dynamic> _$ProductToJson(Product instance) {
   final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {

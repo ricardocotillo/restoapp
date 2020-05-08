@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurante/components/cartIcon.dart';
 import 'package:restaurante/components/categoryPanel.dart';
 import 'package:restaurante/controllers/categoriaController.dart';
-import 'package:restaurante/models/Categoria.dart';
+import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/views/cart.dart';
 
 class HomeView extends StatefulWidget {

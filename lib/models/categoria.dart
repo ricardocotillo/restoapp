@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'Categoria.g.dart';
+part 'categoria.g.dart';
 
 @JsonSerializable(includeIfNull: false)
 class Categoria {
@@ -9,7 +9,7 @@ class Categoria {
   final String title;
   final String image;
   @JsonKey(name: 'products')
-  final List<Item> items;
+  final List<Product> items;
   @JsonKey(ignore: true)
   bool isExpanded;
 
@@ -21,7 +21,7 @@ class Categoria {
 }
 
 @JsonSerializable(includeIfNull: false)
-class Item {
+class Product {
   final String image;
   @JsonKey(ignore: true)
   final Image thumbnail;
@@ -33,7 +33,7 @@ class Item {
   @JsonKey(name: 'choice_types')
   List<Extra> extras;
 
-  Item(
+  Product(
       {this.title,
       this.description,
       this.price,
@@ -42,8 +42,8 @@ class Item {
       this.extras,
       this.sku});
 
-  factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
-  Map<String, dynamic> toJson() => _$ItemToJson(this);
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
 
 @JsonSerializable(includeIfNull: false)

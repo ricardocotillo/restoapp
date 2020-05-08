@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/components/multipleChoice.dart';
-import 'package:restaurante/models/Categoria.dart';
+import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/models/cartItem.dart';
 import 'package:restaurante/providers/cartProvider.dart';
 
 class DetailView extends StatefulWidget {
-  final Item item;
+  final Product item;
   DetailView({this.item});
   @override
   _DetailViewState createState() => _DetailViewState();
@@ -106,7 +106,7 @@ class _DetailViewState extends State<DetailView> {
                     style: _textStyle,
                   ),
                   onPressed: () {
-                    Item item = Item(
+                    Product item = Product(
                         image: widget.item.image,
                         thumbnail: widget.item.thumbnail,
                         title: widget.item.title,

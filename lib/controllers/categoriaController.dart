@@ -1,4 +1,4 @@
-import 'package:restaurante/models/Categoria.dart';
+import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/services/categoryService.dart';
 
 class CategoriaController {

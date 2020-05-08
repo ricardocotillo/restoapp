@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurante/models/Categoria.dart';
+import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/models/cartItem.dart';
 import 'package:restaurante/providers/cartProvider.dart';
 import 'package:restaurante/views/checkout.dart';
@@ -15,7 +15,7 @@ class _CartViewState extends State<CartView> {
   final TextStyle _textStyle =
       TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 
-  List<String> getExtras(Item item) {
+  List<String> getExtras(Product item) {
     List<String> extraDesc = [];
     item.extras
         .where((e) => e.choices.any((c) => c.chosen))

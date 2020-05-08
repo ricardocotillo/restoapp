@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:restaurante/models/Categoria.dart';
+import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/views/detail.dart';
 
 class CategoriaPanel extends StatefulWidget {
