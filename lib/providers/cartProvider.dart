@@ -1,29 +1,50 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:restaurante/models/cart.dart';
 import 'package:restaurante/models/order.dart';
 
 class CartProvider with ChangeNotifier {
-  List<CartItem> items = [];
+  CartProvider() {
+    _fetchCart();
+  }
+
+  final FlutterSecureStorage _storage = new FlutterSecureStorage();
+  List<CartItem> _items = [];
+
+  Future<void> _fetchCart() async {
+    final String cartData = await _storage.read(key: 'cart');
+    final List<dynamic> cart = jsonDecode(cartData);
+    final List<CartItem> cartItems =
+        cart.map((e) => CartItem.fromJson(e)).toList();
+    _items = cartItems;
+    notifyListeners();
+  }
 
   double get totalPrice {
     double amount = 0;
-    items.forEach((item) => amount += item.price);
+    _items.forEach((item) => amount += item.price);
     return amount;
   }
 
-  int get count => items.length;
+  int get count => _items.length;
 
-  void clearCart() {
-    items = [];
+  List<CartItem> get items => _items;
+
+  void clearCart() async {
+    _items = [];
+    await _storage.delete(key: 'cart');
     notifyListeners();
   }
 
-  void addItem(CartItem item) {
-    items.add(item);
+  void addItem(CartItem item) async {
+    _items.add(item);
+    await _storage.write(key: 'cart', value: jsonEncode(_items));
     notifyListeners();
   }
 
-  List<OrderItem> get orderItems => items.map((item) {
+  List<OrderItem> get orderItems => _items.map((item) {
         List<OrderItemChoice> orderItemChoices = [];
         item.item.extras.forEach((e) {
           orderItemChoices = orderItemChoices +

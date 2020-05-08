@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/components/multipleChoice.dart';
 import 'package:restaurante/models/categoria.dart';
@@ -13,6 +14,7 @@ class DetailView extends StatefulWidget {
 }
 
 class _DetailViewState extends State<DetailView> {
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
   double _price;
   List<Extra> _extras;
   final TextStyle _textStyle =
