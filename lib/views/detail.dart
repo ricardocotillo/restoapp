@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/components/multipleChoice.dart';
 import 'package:restaurante/models/categoria.dart';
@@ -14,9 +14,12 @@ class DetailView extends StatefulWidget {
 }
 
 class _DetailViewState extends State<DetailView> {
-  final FlutterSecureStorage _storage = FlutterSecureStorage();
   double _price;
+
   List<Extra> _extras;
+
+  int _quantity = 1;
+
   final TextStyle _textStyle =
       TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 
@@ -39,7 +42,7 @@ class _DetailViewState extends State<DetailView> {
             amount += c.price;
           }
         }));
-    return amount;
+    return amount * _quantity;
   }
 
   @override
@@ -87,7 +90,42 @@ class _DetailViewState extends State<DetailView> {
                               choices: _extras[index].choices,
                             ))
                     : []) +
-                [Padding(padding: const EdgeInsets.symmetric(vertical: 25.0))],
+                [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      ButtonTheme(
+                        minWidth: 40.0,
+                        height: 40.0,
+                        child: FlatButton(
+                          child: Icon(
+                            FontAwesomeIcons.minus,
+                            color: Colors.white,
+                            size: 12.0,
+                          ),
+                          color: Colors.grey,
+                          disabledColor: Colors.grey[400],
+                          onPressed: _quantity > 1 ? _decreaseQuantity : null,
+                        ),
+                      ),
+                      Text(_quantity.toString()),
+                      ButtonTheme(
+                        minWidth: 40.0,
+                        height: 40.0,
+                        child: FlatButton(
+                          child: Icon(
+                            FontAwesomeIcons.plus,
+                            color: Colors.white,
+                            size: 12.0,
+                          ),
+                          color: Colors.grey,
+                          onPressed: _increaseQuantity,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 25.0))
+                ],
           ),
         ),
         bottomSheet: Container(
@@ -107,30 +145,45 @@ class _DetailViewState extends State<DetailView> {
                     'Agregar a pedido',
                     style: _textStyle,
                   ),
-                  onPressed: () {
-                    Product item = Product(
-                        image: widget.item.image,
-                        thumbnail: widget.item.thumbnail,
-                        title: widget.item.title,
-                        sku: widget.item.sku,
-                        description: widget.item.description,
-                        price: widget.item.price);
-
-                    item.extras = _extras
-                        .where((e) => e.choices.any((c) => c.chosen))
-                        .map((e) => Extra(
-                            title: e.title,
-                            isMultiple: e.isMultiple,
-                            choices: e.choices.where((c) => c.chosen).toList()))
-                        .toList();
-                    _cartProvider.addItem(CartItem(
-                      price: totalPrice(),
-                      item: item,
-                    ));
-                    Navigator.of(context).pop();
-                  })
+                  onPressed: () => _addToOrder(_cartProvider))
             ],
           ),
         ));
+  }
+
+  void _increaseQuantity() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  void _decreaseQuantity() {
+    setState(() {
+      _quantity--;
+    });
+  }
+
+  void _addToOrder(CartProvider cartProvider) {
+    Product item = Product(
+        image: widget.item.image,
+        thumbnail: widget.item.thumbnail,
+        title: widget.item.title,
+        sku: widget.item.sku,
+        description: widget.item.description,
+        price: widget.item.price);
+
+    item.extras = _extras
+        .where((e) => e.choices.any((c) => c.chosen))
+        .map((e) => Extra(
+            title: e.title,
+            isMultiple: e.isMultiple,
+            choices: e.choices.where((c) => c.chosen).toList()))
+        .toList();
+    cartProvider.addItem(CartItem(
+      quantity: _quantity,
+      price: totalPrice(),
+      item: item,
+    ));
+    Navigator.of(context).pop();
   }
 }

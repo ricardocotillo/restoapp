@@ -33,7 +33,7 @@ class _MultipleChoiceState extends State<MultipleChoice> {
     return Container(
       margin: const EdgeInsets.all(10.0),
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+      decoration: BoxDecoration(border: Border.all(width: 0.5), borderRadius: BorderRadius.circular(25.0)),
       child: Column(
           children: <Widget>[Text(widget.title?? '')] +
               List.generate(

@@ -40,8 +40,14 @@ class CartProvider with ChangeNotifier {
 
   void addItem(CartItem item) async {
     _items.add(item);
-    await _storage.write(key: 'cart', value: jsonEncode(_items));
     notifyListeners();
+    await _storage.write(key: 'cart', value: jsonEncode(_items));
+  }
+
+  void deleteItem(int i) async {
+    _items.removeAt(i);
+    notifyListeners();
+    // await _storage.write(key: 'cart', value: jsonEncode(_items));
   }
 
   List<OrderItem> get orderItems => _items.map((item) {

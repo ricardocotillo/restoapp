@@ -31,32 +31,33 @@ class _CartViewState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     final CartProvider _cartProvider = Provider.of<CartProvider>(context);
+    final items = _cartProvider.items;
     return Scaffold(
       appBar: AppBar(
         title: Text('Mi pedido'),
       ),
       body: _cartProvider.count > 0
           ? ListView(
-              children: _cartProvider.items
-                  .map((CartItem item) => ListTile(
-                        dense: true,
-                        trailing: Text(
-                          item.price.toStringAsFixed(2),
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        leading: Text('1x'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: item.item.extras != null
-                              ? getExtras(item.item)
-                                  .map((e) => Text(e))
-                                  .toList()
-                              : [],
-                        ),
-                        title: Text(item.item.title),
-                      ))
-                  .toList(),
-            )
+              children: List.generate(
+              items.length,
+              (index) => ListTile(
+                dense: true,
+                trailing: Text(
+                  items[index].price.toStringAsFixed(2),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                leading: Text('1x'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: items[index].item.extras != null
+                      ? getExtras(items[index].item)
+                          .map((e) => Text(e))
+                          .toList()
+                      : [],
+                ),
+                title: Text(items[index].item.title),
+              ),
+            ))
           : Center(
               child: Text(
               'Tu carrito está vacío',

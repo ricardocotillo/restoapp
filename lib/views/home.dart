@@ -68,7 +68,9 @@ class _HomeViewState extends State<HomeView> {
                         children: <Widget>[
                           banner,
                           CategoriaPanel(
-                            categorias: categorias,
+                            categorias: categorias
+                                .where((c) => c.items.length > 0)
+                                .toList(),
                             expansionCallback: (int i, bool expanded) {
                               setState(() {
                                 categorias[i].isExpanded = !expanded;

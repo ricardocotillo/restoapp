@@ -8,6 +8,7 @@ part of 'categoria.dart';
 
 Categoria _$CategoriaFromJson(Map<String, dynamic> json) {
   return Categoria(
+    id: json['id'] as int,
     title: json['name'] as String,
     image: json['image'] as String,
     items: (json['products'] as List)
@@ -26,6 +27,7 @@ Map<String, dynamic> _$CategoriaToJson(Categoria instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
   writeNotNull('name', instance.title);
   writeNotNull('image', instance.image);
   writeNotNull('products', instance.items);
@@ -34,6 +36,7 @@ Map<String, dynamic> _$CategoriaToJson(Categoria instance) {
 
 Product _$ProductFromJson(Map<String, dynamic> json) {
   return Product(
+    id: json['id'] as int,
     title: json['name'] as String,
     description: json['description'] as String,
     price: (json['price'] as num)?.toDouble(),
@@ -55,6 +58,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
   writeNotNull('image', instance.image);
   writeNotNull('name', instance.title);
   writeNotNull('sku', instance.sku);
@@ -66,6 +70,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) {
 
 Extra _$ExtraFromJson(Map<String, dynamic> json) {
   return Extra(
+    id: json['id'] as int,
     title: json['name'] as String,
     choices: (json['choices'] as List)
         ?.map((e) =>
@@ -84,6 +89,7 @@ Map<String, dynamic> _$ExtraToJson(Extra instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
   writeNotNull('name', instance.title);
   writeNotNull('choices', instance.choices);
   writeNotNull('is_multiple', instance.isMultiple);
@@ -92,6 +98,7 @@ Map<String, dynamic> _$ExtraToJson(Extra instance) {
 
 Choice _$ChoiceFromJson(Map<String, dynamic> json) {
   return Choice(
+    id: json['id'] as int,
     name: json['name'] as String,
     price: (json['price'] as num)?.toDouble(),
     chosen: json['chosen'] as bool,
@@ -107,6 +114,7 @@ Map<String, dynamic> _$ChoiceToJson(Choice instance) {
     }
   }
 
+  writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
   writeNotNull('price', instance.price);
   writeNotNull('chosen', instance.chosen);
