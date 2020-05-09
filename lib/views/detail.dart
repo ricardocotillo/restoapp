@@ -32,7 +32,7 @@ class _DetailViewState extends State<DetailView> {
     _extras = widget.item.extras.where((e) => e.choices.length > 0).toList();
   }
 
-  double totalPrice() {
+  double getPrice() {
     if (_extras == null) {
       return _price;
     }
@@ -42,7 +42,7 @@ class _DetailViewState extends State<DetailView> {
             amount += c.price;
           }
         }));
-    return amount * _quantity;
+    return amount;
   }
 
   @override
@@ -136,7 +136,7 @@ class _DetailViewState extends State<DetailView> {
               Padding(
                 padding: _padding,
                 child: Text(
-                  totalPrice().toStringAsFixed(2),
+                  (getPrice() * _quantity).toStringAsFixed(2),
                   style: _textStyle,
                 ),
               ),
@@ -181,7 +181,7 @@ class _DetailViewState extends State<DetailView> {
         .toList();
     cartProvider.addItem(CartItem(
       quantity: _quantity,
-      price: totalPrice(),
+      price: getPrice(),
       item: item,
     ));
     Navigator.of(context).pop();

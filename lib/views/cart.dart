@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurante/components/quantityComponent.dart';
 import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/models/cart.dart';
 import 'package:restaurante/providers/cartProvider.dart';
@@ -37,27 +38,53 @@ class _CartViewState extends State<CartView> {
         title: Text('Mi pedido'),
       ),
       body: _cartProvider.count > 0
-          ? ListView(
-              children: List.generate(
-              items.length,
-              (index) => ListTile(
-                dense: true,
-                trailing: Text(
-                  items[index].price.toStringAsFixed(2),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                leading: Text('1x'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: items[index].item.extras != null
-                      ? getExtras(items[index].item)
-                          .map((e) => Text(e))
-                          .toList()
-                      : [],
-                ),
-                title: Text(items[index].item.title),
+          ? ListView.separated(
+              separatorBuilder: (context, _) => Divider(),
+              itemCount: items.length,
+              itemBuilder: (BuildContext context, int index) => Column(
+                children: <Widget>[
+                  ListTile(
+                    dense: true,
+                    trailing: Text(
+                      items[index].totalPrice.toStringAsFixed(2),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: items[index].item.extras != null
+                          ? getExtras(items[index].item)
+                              .map((e) => Text(e))
+                              .toList()
+                          : [],
+                    ),
+                    title: Text(items[index].item.title),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      QuantityComponent(
+                        quantity: items[index].quantity,
+                        increment: () {
+                          _cartProvider.increment(index);
+                        },
+                        decrement: items[index].quantity == 1
+                            ? null
+                            : () {
+                                _cartProvider.decrement(index);
+                              },
+                      ),
+                      FlatButton(
+                        child: Text('Borrar'),
+                        onPressed: () {
+                          _cartProvider.deleteItem(index);
+                        },
+                        textColor: Colors.red,
+                      )
+                    ],
+                  )
+                ],
               ),
-            ))
+            )
           : Center(
               child: Text(
               'Tu carrito está vacío',
@@ -78,7 +105,7 @@ class _CartViewState extends State<CartView> {
             ),
             MaterialButton(
                 child: Text(
-                  _cartProvider.count > 0 ? 'Agregar a pedido' : '',
+                  _cartProvider.count > 0 ? 'Confirmar pedido' : '',
                   style: _textStyle,
                 ),
                 onPressed: _cartProvider.count > 0
