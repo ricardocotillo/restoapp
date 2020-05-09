@@ -41,6 +41,13 @@ class _AddressComponentState extends State<AddressComponent> {
   List<Placemark> _placemarks;
 
   @override
+  void dispose() {
+    _addressController.dispose();
+    _interiorController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final OrderProvider _orderProvider = Provider.of<OrderProvider>(context);
     Size size = MediaQuery.of(context).size;

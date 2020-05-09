@@ -24,6 +24,14 @@ class _PersonalComponentState extends State<PersonalComponent> {
   final TextEditingController _notesController = TextEditingController();
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneControler.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final OrderProvider _orderProvider = Provider.of<OrderProvider>(context);
     final Size size = MediaQuery.of(context).size;
