@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/components/quantityComponent.dart';
 import 'package:restaurante/models/categoria.dart';
-import 'package:restaurante/models/cart.dart';
 import 'package:restaurante/providers/cartProvider.dart';
 import 'package:restaurante/views/checkout.dart';
 
