@@ -39,7 +39,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     id: json['id'] as int,
     title: json['name'] as String,
     description: json['description'] as String,
-    price: (json['price'] as num)?.toDouble(),
+    price: _priceFromJson(json['price']),
     image: json['image'] as String,
     extras: (json['choice_types'] as List)
         ?.map(
@@ -63,7 +63,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) {
   writeNotNull('name', instance.title);
   writeNotNull('sku', instance.sku);
   writeNotNull('description', instance.description);
-  writeNotNull('price', instance.price);
+  writeNotNull('price', _priceToJson(instance.price));
   writeNotNull('choice_types', instance.extras);
   return val;
 }
@@ -100,7 +100,7 @@ Choice _$ChoiceFromJson(Map<String, dynamic> json) {
   return Choice(
     id: json['id'] as int,
     name: json['name'] as String,
-    price: (json['price'] as num)?.toDouble(),
+    price: _priceFromJson(json['price']),
     chosen: json['chosen'] as bool,
   );
 }
@@ -116,7 +116,7 @@ Map<String, dynamic> _$ChoiceToJson(Choice instance) {
 
   writeNotNull('id', instance.id);
   writeNotNull('name', instance.name);
-  writeNotNull('price', instance.price);
+  writeNotNull('price', _priceToJson(instance.price));
   writeNotNull('chosen', instance.chosen);
   return val;
 }

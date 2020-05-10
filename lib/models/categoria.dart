@@ -32,6 +32,7 @@ class Product {
   final String title;
   final String sku;
   final String description;
+  @JsonKey(fromJson: _priceFromJson, toJson: _priceToJson)
   final double price;
   @JsonKey(name: 'choice_types')
   List<Extra> extras;
@@ -69,6 +70,7 @@ class Extra {
 class Choice {
   final int id;
   final String name;
+  @JsonKey(fromJson: _priceFromJson, toJson: _priceToJson)
   final double price;
   bool chosen;
 
@@ -76,4 +78,15 @@ class Choice {
 
   factory Choice.fromJson(Map<String, dynamic> json) => _$ChoiceFromJson(json);
   Map<String, dynamic> toJson() => _$ChoiceToJson(this);
+}
+
+_priceFromJson(dynamic json) {
+  if (json is String) {
+    return double.parse(json);
+  }
+  return json as double;
+}
+
+_priceToJson(double price) {
+  return price.toStringAsFixed(2);
 }

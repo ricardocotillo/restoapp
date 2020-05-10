@@ -67,17 +67,19 @@ class _HomeViewState extends State<HomeView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           banner,
-                          CategoriaPanel(
-                            categorias: categorias
-                                .where((c) => c.items.length > 0)
-                                .toList(),
-                            expansionCallback: (int i, bool expanded) {
-                              setState(() {
-                                categorias[i].isExpanded = !expanded;
-                              });
-                            },
-                          )
-                        ],
+                          categorias != null
+                              ? CategoriaPanel(
+                                  categorias: categorias
+                                      .where((c) => c.items.length > 0)
+                                      .toList(),
+                                  expansionCallback: (int i, bool expanded) {
+                                    setState(() {
+                                      categorias[i].isExpanded = !expanded;
+                                    });
+                                  },
+                                )
+                              : null,
+                        ].where((element) => element != null).toList(),
                       ),
                     ),
                   );

@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:restaurante/common/messages.dart';
 
 class Api {
-  // static final String base = 'http://10.0.2.2:8000/api';
-  static final String base = 'http://demo.cotillo.tech/api';
+  static final String base = 'http://10.0.2.2:8000/api';
+  // static final String base = 'http://demo.cotillo.tech/api';
   static Map<String, String> get contentHeader =>
       {'Content-Type': 'application/json'};
 }
