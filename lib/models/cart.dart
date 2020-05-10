@@ -8,6 +8,7 @@ class CartItem {
   final Product item;
   int quantity;
   double price;
+  @JsonKey(name: 'total_price')
   double totalPrice;
 
   CartItem({this.quantity = 1, this.price, this.item})

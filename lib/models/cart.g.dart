@@ -13,12 +13,12 @@ CartItem _$CartItemFromJson(Map<String, dynamic> json) {
     item: json['item'] == null
         ? null
         : Product.fromJson(json['item'] as Map<String, dynamic>),
-  )..totalPrice = (json['totalPrice'] as num)?.toDouble();
+  )..totalPrice = (json['total_price'] as num)?.toDouble();
 }
 
 Map<String, dynamic> _$CartItemToJson(CartItem instance) => <String, dynamic>{
       'item': instance.item,
       'quantity': instance.quantity,
       'price': instance.price,
-      'totalPrice': instance.totalPrice,
+      'total_price': instance.totalPrice,
     };
