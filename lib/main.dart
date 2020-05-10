@@ -6,9 +6,11 @@ import 'package:restaurante/views/home.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  // FlutterSecureStorage _storage = FlutterSecureStorage();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // _storage.deleteAll();
     return ChangeNotifierProvider(
       create: (_) => CartProvider(),
       child: MaterialApp(

@@ -15,11 +15,13 @@ class CartProvider with ChangeNotifier {
 
   Future<void> _fetchCart() async {
     final String cartData = await _storage.read(key: 'cart');
-    final List<dynamic> cart = jsonDecode(cartData);
-    final List<CartItem> cartItems =
-        cart.map((e) => CartItem.fromJson(e)).toList();
-    _items = cartItems;
-    notifyListeners();
+    if (cartData != null) {
+      final List<dynamic> cart = jsonDecode(cartData);
+      final List<CartItem> cartItems =
+          cart.map((e) => CartItem.fromJson(e)).toList();
+      _items = cartItems;
+      notifyListeners();
+    }
   }
 
   void clearCart() async {
@@ -42,7 +44,7 @@ class CartProvider with ChangeNotifier {
 
   void increment(int index) async {
     _items[index].quantity++;
-    _items[index].totalPrice = _items[index].item.price * _items[index].quantity;
+    _items[index].totalPrice = _items[index].price * _items[index].quantity;
     notifyListeners();
     await _storage.write(key: 'cart', value: jsonEncode(_items));
   }
