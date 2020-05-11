@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/providers/cartProvider.dart';
 import 'package:restaurante/views/home.dart';
+import 'package:restaurante/views/login.view.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,8 +18,8 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.green),
-        // home: CheckoutView(),
-        home: HomeView(),
+        home: LoginView(),
+        // home: HomeView(),
       ),
     );
   }
