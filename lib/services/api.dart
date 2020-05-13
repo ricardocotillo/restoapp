@@ -64,4 +64,20 @@ class Http {
     }
     return json;
   }
+
+  static Future<dynamic> patch(String url, {dynamic body}) async {
+    http.Response res = await http.patch(Api.base + url,
+        body: body, headers: await Api.contentHeader);
+    if (res.statusCode >= 500) {
+      throw ErrorMessages.serverError;
+    }
+    String b = Utf8Decoder().convert(res.bodyBytes);
+    dynamic json = jsonDecode(b);
+    if (res.statusCode >= 400) {
+      String message = json['detail'] ??
+          (json as Map).values.firstWhere((e) => e != null)[0];
+      throw message;
+    }
+    return json;
+  }
 }

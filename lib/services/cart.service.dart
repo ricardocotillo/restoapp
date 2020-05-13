@@ -1,8 +1,11 @@
-// import 'package:restaurante/models/cart.dart';
-// import 'package:restaurante/services/api.dart';
+import 'dart:convert';
 
-// class CartService {
-//   Future<List<CartItem>> update() async {
-//     List<dynamic> json = await Http.put('/carts');
-//   }
-// }
+import 'package:restaurante/models/cart.dart';
+import 'package:restaurante/services/api.dart';
+
+class CartService {
+  Future<void> update(int id, List<CartItem> data) async {
+    final String body = jsonEncode({'data': data});
+    await Http.patch('/carts/$id/', body: body);
+  }
+}

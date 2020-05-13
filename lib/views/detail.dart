@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/components/multipleChoice.dart';
+import 'package:restaurante/controllers/cart.controller.dart';
+import 'package:restaurante/controllers/orderController.dart';
 import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/models/cart.dart';
 import 'package:restaurante/providers/cartProvider.dart';
@@ -163,8 +165,9 @@ class _DetailViewState extends State<DetailView> {
     });
   }
 
-  void _addToOrder(CartProvider cartProvider) {
-    Product item = Product(
+  void _addToOrder(CartProvider cartProvider) async {
+    final CartController _cartController = CartController();
+    final Product item = Product(
         image: widget.item.image,
         thumbnail: widget.item.thumbnail,
         title: widget.item.title,
@@ -179,11 +182,20 @@ class _DetailViewState extends State<DetailView> {
             isMultiple: e.isMultiple,
             choices: e.choices.where((c) => c.chosen).toList()))
         .toList();
-    cartProvider.addItem(CartItem(
+    final CartItem cartItem = CartItem(
       quantity: _quantity,
       price: getPrice(),
       item: item,
-    ));
-    Navigator.of(context).pop();
+    );
+
+    cartProvider.addItem(cartItem);
+
+    try {
+      await _cartController.update(1, cartProvider.items);
+    } catch (e) {
+      print(e.toString());
+    }
+
+    // Navigator.of(context).pop();
   }
 }
