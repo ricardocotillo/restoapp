@@ -48,8 +48,9 @@ class _CheckoutViewState extends State<CheckoutView>
                     order.orderItems = _cartProvider.orderItems;
                     await _orderController.create(order);
                     _cartProvider.clearCart();
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SuccessView()));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => SuccessView()),
+                        (route) => false);
                   },
                 ),
               ]),

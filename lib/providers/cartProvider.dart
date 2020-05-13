@@ -62,7 +62,8 @@ class CartProvider with ChangeNotifier {
     return amount;
   }
 
-  int get count => _items.fold<int>(0, (previousValue, element) => previousValue + element.quantity);
+  int get count => _items.fold<int>(
+      0, (previousValue, element) => previousValue + element.quantity);
 
   List<CartItem> get items => _items;
 
@@ -81,6 +82,7 @@ class CartProvider with ChangeNotifier {
           name: item.item.title,
           sku: item.item.sku,
           price: item.price,
+          totalPrice: item.totalPrice,
           quantity: item.quantity,
           orderItemChoices: orderItemChoices,
         );

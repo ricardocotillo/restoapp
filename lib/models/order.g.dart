@@ -9,7 +9,7 @@ part of 'order.dart';
 Order _$OrderFromJson(Map<String, dynamic> json) {
   return Order(
     interior: json['interior'] as String,
-    total: (json['total'] as num)?.toDouble(),
+    total: _priceFromJson(json['total']),
     orderItems: (json['order_items'] as List)
         ?.map((e) =>
             e == null ? null : OrderItem.fromJson(e as Map<String, dynamic>))
@@ -26,7 +26,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'phone': instance.phone,
       'address': instance.address,
       'interior': instance.interior,
-      'total': instance.total,
+      'total': _priceToJson(instance.total),
       'notes': instance.notes,
       'order_items': instance.orderItems,
     };
@@ -35,20 +35,22 @@ OrderItem _$OrderItemFromJson(Map<String, dynamic> json) {
   return OrderItem(
     sku: json['sku'] as String,
     name: json['name'] as String,
-    price: (json['price'] as num)?.toDouble(),
+    price: _priceFromJson(json['price']),
     quantity: json['quantity'] as int,
     orderItemChoices: (json['order_item_choices'] as List)
         ?.map((e) => e == null
             ? null
             : OrderItemChoice.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    totalPrice: _priceFromJson(json['total_price']),
   );
 }
 
 Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
       'sku': instance.sku,
       'name': instance.name,
-      'price': instance.price,
+      'price': _priceToJson(instance.price),
+      'total_price': _priceToJson(instance.totalPrice),
       'quantity': instance.quantity,
       'order_item_choices': instance.orderItemChoices,
     };
@@ -56,12 +58,12 @@ Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
 OrderItemChoice _$OrderItemChoiceFromJson(Map<String, dynamic> json) {
   return OrderItemChoice(
     name: json['name'] as String,
-    price: (json['price'] as num)?.toDouble(),
+    price: _priceFromJson(json['price']),
   );
 }
 
 Map<String, dynamic> _$OrderItemChoiceToJson(OrderItemChoice instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'price': instance.price,
+      'price': _priceToJson(instance.price),
     };

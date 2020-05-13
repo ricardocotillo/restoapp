@@ -146,6 +146,7 @@ class _AddressComponentState extends State<AddressComponent> {
                             color: Theme.of(context).colorScheme.primary,
                             textColor: Colors.white,
                             onPressed: () {
+                              FocusScope.of(context).unfocus();
                               if (_formKey.currentState.validate()) {
                                 _orderProvider.saveAddress(
                                     _addressController.text,
