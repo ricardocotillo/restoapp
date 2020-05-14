@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurante/components/cartIcon.dart';
 import 'package:restaurante/components/categoryPanel.dart';
+import 'package:restaurante/controllers/auth.controller.dart';
 import 'package:restaurante/controllers/categoriaController.dart';
 import 'package:restaurante/models/categoria.dart';
 import 'package:restaurante/views/cart.dart';
+import 'package:restaurante/views/login.view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -45,11 +48,36 @@ class _HomeViewState extends State<HomeView> {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Demo'),
+          leading: CartIcon(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => CartView())),
+          ),
           actions: <Widget>[
-            CartIcon(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => CartView())),
-            )
+            IconButton(
+                icon: Icon(FontAwesomeIcons.signOutAlt),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      child: AlertDialog(
+                        title: Text('Estas por salir del aplicativo'),
+                        content: Text('¿Seguro que deaseas salir?'),
+                        actions: <Widget>[
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _logout();
+                              },
+                              child: Text('Aceptar')),
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Cancelar'),
+                            textColor: Colors.red,
+                          ),
+                        ],
+                      ));
+                })
           ],
         ),
         body: FutureBuilder(
@@ -90,5 +118,12 @@ class _HomeViewState extends State<HomeView> {
                   );
               }
             }));
+  }
+
+  void _logout() {
+    final AuthController authController = AuthController();
+    authController.logout();
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginView()), (route) => false);
   }
 }

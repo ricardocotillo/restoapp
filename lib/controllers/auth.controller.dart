@@ -10,4 +10,8 @@ class AuthController {
   Future<void> register(RegisterModel data) async {
     return _authService.register(data);
   }
+
+  Future<void> logout() async {
+    return _authService.logout();
+  }
 }
