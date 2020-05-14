@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:restaurante/controllers/login.controller.dart';
-import 'package:restaurante/models/login.model.dart';
+import 'package:restaurante/controllers/auth.controller.dart';
+import 'package:restaurante/models/auth.model.dart';
 import 'package:restaurante/views/home.dart';
+import 'package:restaurante/views/register.view.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final LoginController _loginController = LoginController();
+  final AuthController _loginController = AuthController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
@@ -80,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
                           username: _emailController.text,
                           password: _passController.text);
                       await _loginController.login(data);
-                      
+
                       setState(() {
                         _loading = false;
                       });
@@ -111,7 +112,10 @@ class _LoginViewState extends State<LoginView> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => RegisterView()));
+                      },
                       child: Text(
                         'Regístrate',
                         textAlign: TextAlign.center,

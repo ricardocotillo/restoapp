@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurante/providers/cartProvider.dart';
-import 'package:restaurante/views/register.view.dart';
 import 'package:restaurante/views/splash.view.dart';
 
 void main() => runApp(MyApp());
@@ -17,8 +16,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.green),
-        home: RegisterView(),
-        // home: SplashView(),
+        home: SplashView(),
       ),
     );
   }

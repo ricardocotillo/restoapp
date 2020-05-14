@@ -1,14 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:restaurante/models/login.model.dart';
+import 'package:restaurante/models/auth.model.dart';
 import 'package:restaurante/services/api.dart';
 
-class LoginService {
+class AuthService {
   Future<void> login(LoginModel data) async {
     Map<String, dynamic> json = await Http.post('/token/',
         body: jsonEncode(data), header: {'Content-Type': 'application/json'});
     setTokens(json);
+  }
+
+  Future<void> register(RegisterModel data) async {
+    Map<String, dynamic> json = await Http.post('/register/',
+        body: jsonEncode(data), header: {'Content-Type': 'application/json'});
+    setTokens(json['token']);
   }
 }
 

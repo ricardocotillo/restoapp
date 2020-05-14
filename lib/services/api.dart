@@ -35,6 +35,7 @@ class Http {
       {dynamic body, Map<String, String> header}) async {
     http.Response res = await http.post(Api.base + url,
         body: body, headers: header ?? await Api.contentHeader);
+    print(res.body);
     if (res.statusCode >= 500) {
       throw ErrorMessages.serverError;
     }

@@ -8,6 +8,7 @@ class FieldMessages {
   static const notValidPassword = 'Contraseña no válida';
   static const date = 'Este campo de ser una fecha';
   static const phone = 'Este deve ser un número telefónico';
+  static const repeatPass = 'Este campo debe concordar con contraseña';
 }
 
 class ErrorMessages {
